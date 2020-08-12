@@ -107,6 +107,8 @@
             </li>
           </ul>
         </div>
+        <h1>Visit Counter:</h1>
+        <div id='visits'></div>
       </section>
 
       <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
@@ -304,7 +306,33 @@
 
     <!-- Custom scripts for this template -->
     <script src="js/resume.min.js"></script>
+    <!-- Ajax for Site Counter-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+   
+    var API_URL = 'https://bzc7cwg7g4.execute-api.us-west-2.amazonaws.com/prod/counter';
+    $(document).ready(function(){
+      $.ajax({
+        type: 'GET',
+        url : API_URL,
+        
+        sucess: function(data){
+         $('#visits').html('');
 
+         $('#visits').append('<p>' + data.Count + '</p>') 
+        }</script>
+      });
+
+      $.ajax({
+          type: "POST",
+          url: API_URL,
+          data: JSON.stringify({"Id": date.now()}),
+          contentType: "application/json"
+          success: success 
+        });
+
+    });
+    
   </body>
 
 </html>
