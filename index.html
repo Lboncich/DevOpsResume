@@ -316,9 +316,9 @@
         type: 'GET',
         url : API_URL,
         
-        sucess: function(data){
+        success: function(data){
          $('#visits').html('');
-
+          console.log(data);
          $('#visits').append('<p>' + data.Count + '</p>') 
         }
       });
