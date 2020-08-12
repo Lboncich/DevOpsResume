@@ -326,7 +326,7 @@
       $.ajax({
           type: "POST",
           url: API_URL,
-          data: JSON.stringify({"Id": date.now()}),
+          data: JSON.stringify({"Id": Date.now()}),
           contentType: "application/json",
           success: success 
         });
