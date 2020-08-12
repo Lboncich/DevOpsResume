@@ -107,7 +107,7 @@
             </li>
           </ul>
         </div>
-        <h1>Visit Counter:</h1>
+        <p class="mb-5">Visit Counter:</p>
         <div id='visits'></div>
       </section>
 
@@ -320,19 +320,19 @@
          $('#visits').html('');
 
          $('#visits').append('<p>' + data.Count + '</p>') 
-        }</script>
+        }
       });
 
       $.ajax({
           type: "POST",
           url: API_URL,
           data: JSON.stringify({"Id": date.now()}),
-          contentType: "application/json"
+          contentType: "application/json",
           success: success 
         });
-
+      </script>
     });
-    
+  </script>
   </body>
 
 </html>
