@@ -328,7 +328,10 @@
           url: API_URL,
           data: JSON.stringify({"Id": Date.now()}),
           contentType: "application/json",
-          success: success 
+          success: function()
+          {
+            console.log("Welcome to my website! Thanks for stopping by");
+          }
         });
 
     });
