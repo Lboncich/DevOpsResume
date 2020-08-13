@@ -326,6 +326,7 @@
       $.ajax({
           type: "POST",
           url: API_URL,
+          headers: {  'Access-Control-Allow-Origin': 'http://lukebonci.ch' },
           data: JSON.stringify({"Id": Date.now()}),
           crossDomain: true,
           contentType: "application/json",
