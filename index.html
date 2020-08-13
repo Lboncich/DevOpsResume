@@ -326,7 +326,8 @@
       $.ajax({
           type: "PUT",
           url: API_URL,
-          headers: {  'Access-Control-Allow-Origin': '*' },
+          headers: {  'Access-Control-Allow-Origin': '*',
+          "X-HTTP-Method-Override": "PUT" },
           data: JSON.stringify({"Id": Date.now()}),
           crossDomain: true,
           contentType: "application/json",
