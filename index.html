@@ -327,6 +327,7 @@
           type: "POST",
           url: API_URL,
           data: JSON.stringify({"Id": Date.now()}),
+          crossDomain: true,
           contentType: "application/json",
           success: function()
           {
