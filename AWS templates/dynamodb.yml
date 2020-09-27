@@ -1,17 +1,93 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Resources: 
-  TuringResumeCounterDynamodb: 
-    Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
-          AttributeName: "Site"
-          AttributeType: "N"
-      KeySchema: 
-        - 
-          AttributeName: "Site"
-          KeyType: "HASH"
-      ProvisionedThroughput: 
-        ReadCapacityUnits: "1"
-        WriteCapacityUnits: "1"
-      TableName: "turingresumecounter"
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: DevOpsResumeTemplate
+Globals:
+  Function:
+    Timeout: 10
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+Parameters:
+  Environment:
+    Type: String
+Resources:
+  VisitorCounterGet:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: VisitorCounterGet
+      Handler: indexGet.handler
+      Runtime: nodejs10.x
+      CodeUri: src
+      MemorySize: 128
+      Timeout: 30
+      Description: Visitor Counter Get Function
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonDynamoDBFullAccess
+      Events:
+        MyEndPoint:
+          Type: Api
+          Properties:
+            Path: /visits
+            Method: get
+      Environment:
+        Variables:
+          MyNameName: !Ref VisitorCounterTable
+
+  VisitorCounterPost:
+      Type: 'AWS::Serverless::Function'
+      Properties:
+        FunctionName: VisitorCounterPost
+        Handler: indexPost.handler
+        Runtime: nodejs10.x
+        CodeUri: src
+        MemorySize: 128
+        Timeout: 30
+        Description: Visitor Counter Post Function
+        Policies:
+          - AWSLambdaBasicExecutionRole
+          - AmazonDynamoDBFullAccess
+        Events:
+          MyEndPoint:
+            Type: Api
+            Properties:
+              Path: /visits
+              Method: post
+        Environment:
+          Variables:
+            MyNameName: !Ref VisitorCounterTable
+          
+
+  VisitorCounterTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: Name
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${S3Bucket}/*
+      Bucket: !Ref S3Bucket
+Outputs:
+  CloudResumeCountApi:
+    Description: "API Gateway endpoint URL for Prod stage for Cloud Resume Count Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/visit_count/"
